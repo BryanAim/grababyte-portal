@@ -153,3 +153,7 @@ a {
   background: url("food.jpg") left bottom;
   background-size: cover;
 }
+.UserView {
+  background: url("https://cdn.auth0.com/blog/whatabyte/patio.png") left bottom;
+  background-size: cover;
+}
