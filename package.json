@@ -4,9 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./index.js"
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "nodemon": "^1.19.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pug": "^2.0.4"
+  }
 }
