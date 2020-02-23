@@ -30,7 +30,7 @@ const session = {
   saveUninitialized: false
 };
 
-if (app.get('env') ==='production') {
+if (app.get('env') === 'production') {
   // Serve secure cookies, requires HTTPS
   session.cookie.secure = true;
 }
@@ -60,9 +60,9 @@ const strategy = new Auth0Strategy({
 /**
  *  App Configuration ie configuring express to use Pug as the view template engine
  */
-app.set("views",path.join(__dirname,"views"));
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
-app.use(express.static(path.join(__dirname,"public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(expressSession(session));
 
@@ -73,11 +73,11 @@ app.use(passport.session());
 
 // Storing and retrieving user data from the session
 // support login sessions by serializing and deserializing user instances to and from the session
-passport.serializeUser((user,done)=> {
+passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser((user, done)=>{
+passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
@@ -95,18 +95,38 @@ app.use("/", authRouter);
 /**
  * Routes Definitions
  */
+
+// to protect your / user route and ensure it is only accessible
+// if the user is logged in
+const secured = (req, res, next) => {
+  if (req.user) {
+    return next();
+  }
+  req.session.returnTo = req.originalUrl;
+  res.redirect('/login');
+};
 app.get('/', (req, res) => {
-  res.render('index', {title: "Home"});
+  res.render('index', {
+    title: "Home"
+  });
 });
-app.get('/user', (req, res) => {
-  res.render('user', {title: "Profile", userProfile: {nickname: "Isale"}})
+app.get('/user', secured, (req, res, next) => {
+  const {
+    _raw,
+    _json,
+    ...userProfile
+  } = req.user;
+  res.render('user', {
+    title: "Profile",
+    userProfile: userProfile
+  });
 });
 
 
 /**
  * Server Activation
  */
-app.listen(port, ()=> {
+app.listen(port, () => {
   console.log(`Listening to requests on http://localhost:${port}`);
-  
+
 });
